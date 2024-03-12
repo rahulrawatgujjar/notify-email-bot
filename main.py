@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import asyncio
 from twilio.rest import Client
 import imaplib
