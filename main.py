@@ -90,7 +90,7 @@ async def check_email(server, username, password, keywords, sender_list, twilio_
                 if_status,keyword = check_keywords(msg, keywords, sender_list)
                 if if_status:
                     print("hello")
-                    await send_whatsapp_notification(*twilio_credentials, from_whatsapp_number, to_whatsapp_number, f"Keyword: {keyword}\nSubject: {decoded_subject}\nSender: {sender}")
+                    await send_whatsapp_notification(*twilio_credentials, from_whatsapp_number, to_whatsapp_number, f"*Keyword*:\n{keyword}\n\n*Subject*:\n{decoded_subject}\n\n*Sender*:\n{sender}")
     mail.close()
     mail.logout()
 
@@ -112,9 +112,13 @@ async def main():
 
 # Run the script
 
-while True:
-    try:
-        asyncio.run(main())
-    except:
-        print("error occured")
-    time.sleep(60)
+async def run_main():
+    while True:
+        try:
+            await main()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        await asyncio.sleep(60)
+
+
+asyncio.run(run_main())
