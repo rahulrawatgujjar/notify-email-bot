@@ -8,8 +8,9 @@ import os
 from datetime import datetime
 import quopri
 from email.header import decode_header
-# from dotenv import load_dotenv
-# load_dotenv()
+import time
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def decode_subject(encoded_subject):
@@ -75,7 +76,7 @@ async def check_email(server, username, password, keywords, sender_list, twilio_
     status, data = mail.search(None, criteria)
 
     if status == 'OK':
-        # print("len:",len(data[0].split()))
+        print("len:",len(data[0].split()))
         for num in data[0].split():
             status, data = mail.fetch(num, '(RFC822)')
             if status == 'OK':
@@ -88,6 +89,7 @@ async def check_email(server, username, password, keywords, sender_list, twilio_
                 # print("Subject:", decoded_subject)
                 if_status,keyword = check_keywords(msg, keywords, sender_list)
                 if if_status:
+                    print("hello")
                     await send_whatsapp_notification(*twilio_credentials, from_whatsapp_number, to_whatsapp_number, f"Keyword: {keyword}\nSubject: {decoded_subject}\nSender: {sender}")
     mail.close()
     mail.logout()
@@ -109,4 +111,10 @@ async def main():
     await check_email(server, username, password, keywords, sender_list, twilio_credentials, from_whatsapp_number, to_whatsapp_number)
 
 # Run the script
-asyncio.run(main())
+
+while True:
+    try:
+        asyncio.run(main())
+    except:
+        print("error occured")
+    time.sleep(60)
